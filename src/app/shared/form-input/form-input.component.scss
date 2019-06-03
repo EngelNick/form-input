@@ -1,0 +1,18 @@
+input {
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: none;
+  transition: all 0.25s ease-in-out;
+  border-bottom: 1px solid black;
+  text-align: center;
+  font-size: 14px;
+  width: 100%;
+  &:focus {
+    outline: none;
+  }
+}
+
+.text-error {
+  color: #ff5519;
+  font-size: 12px;
+}

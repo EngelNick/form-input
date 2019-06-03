@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+app-form-input.ng-valid.ng-dirty input {
+  border-bottom: 1px solid #6aff04;
+}
+
+app-form-input.ng-invalid.ng-dirty input {
+  border-bottom: 1px solid #ff5519;
+}

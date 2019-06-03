@@ -1,0 +1,16 @@
+<div>
+  <input [(ngModel)]="value"
+         [placeholder]="placeholder"
+         [type]="type"
+  />
+  <div *ngFor="let error of ((control?.errors || errors) | keyvalue)" class="text-error">
+    <div [ngSwitch]="error.key">
+      <div *ngSwitchCase="'required'">*Required field</div>
+      <div *ngSwitchCase="'minlength'">*Minimal length {{control.errors.minlength.requiredLength}}</div>
+      <div *ngSwitchCase="'maxlength'">*Maximum length {{control.errors.maxlength.requiredLength}}</div>
+      <div *ngSwitchCase="'min'">*Minimum {{control.errors.min.min}}</div>
+      <div *ngSwitchCase="'max'">*Maximum {{control.errors.max.max}}</div>
+      <div *ngSwitchDefault>*{{error.value}}</div>
+    </div>
+  </div>
+</div>
