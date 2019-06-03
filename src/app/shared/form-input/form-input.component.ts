@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateEqual } from '../validators/validate-confirm-password';
+import { ValidateEquality } from '../validators/validate-equality';
 
 @Component({
   selector: 'app-form-input',
@@ -85,7 +85,7 @@ export class FormInputComponent implements ControlValueAccessor, Validator, OnIn
     this.control = control;
 
     if (this.equalToControl && control.valid) {
-      return ValidateEqual(this.control.value, this.equalToControl.value, this.equalErrorText);
+      return ValidateEquality(this.control.value, this.equalToControl.value, this.equalErrorText);
     }
     return control.invalid ? this.control.errors : null;
   }
