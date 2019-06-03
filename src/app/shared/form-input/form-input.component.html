@@ -3,7 +3,7 @@
          [placeholder]="placeholder"
          [type]="type"
   />
-  <div *ngFor="let error of ((control?.errors || errors) | keyvalue)" class="text-error">
+  <div *ngFor="let error of control?.errors | keyvalue" class="text-error">
     <div [ngSwitch]="error.key">
       <div *ngSwitchCase="'required'">*Required field</div>
       <div *ngSwitchCase="'minlength'">*Minimal length {{control.errors.minlength.requiredLength}}</div>

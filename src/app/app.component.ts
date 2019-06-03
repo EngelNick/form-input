@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ValidateEmail } from './shared/validators/validate-email';
 import { Subscription } from 'rxjs';
+import { ValidateEquality } from './shared/validators/validate-equality';
 
 @Component({
   selector: 'app-root',
@@ -21,13 +22,13 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private createForm(): void {
+    const password = new FormControl(null, [Validators.required]);
     this.formGroup = this.formBuilder.group({
       field: [null, [
         ValidateEmail, Validators.required
-      ]]
-      ,
-      password: [null, [Validators.required]],
-      confirm: [null, Validators.required],
+      ]],
+      password: password,
+      confirm: [null, [Validators.required, ValidateEquality(password, 'Passport do not match')]],
     });
   }
 

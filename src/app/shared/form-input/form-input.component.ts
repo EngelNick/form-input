@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ValidateEquality } from '../validators/validate-equality';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-input',
@@ -19,36 +19,22 @@ import { ValidateEquality } from '../validators/validate-equality';
     }],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormInputComponent implements ControlValueAccessor, Validator, OnInit, OnDestroy {
+export class FormInputComponent implements ControlValueAccessor, Validator, OnDestroy {
 
   @Input() type = 'text';
   @Input() placeholder = 'text';
-  @Input() equalErrorText = 'Confirm not equal to previous value';
-  @Input() equalToControl: AbstractControl;
-  @Input() errors: any;
 
   control: AbstractControl;
   private innerValue: boolean;
   private onTouchedCallback: () => void;
   private onChangeCallback: (_: any) => {};
+  private controlStatus: string;
   private subscription: Subscription = new Subscription();
 
   constructor(private cd: ChangeDetectorRef) {
   }
 
-  ngOnInit(): void {
-    if (this.equalToControl) {
-      this.subscription.add(
-        this.equalToControl.valueChanges
-          .subscribe(() => {
-            this.control.updateValueAndValidity();
-            this.cd.detectChanges();
-          })
-      );
-    }
-  }
-
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
@@ -83,11 +69,21 @@ export class FormInputComponent implements ControlValueAccessor, Validator, OnIn
 
   validate(control: AbstractControl): ValidationErrors | null {
     this.control = control;
+    this.subscribeOnControlStatusChanges();
+    return control.invalid ? control.errors : null;
+  }
 
-    if (this.equalToControl && control.valid) {
-      return ValidateEquality(this.control.value, this.equalToControl.value, this.equalErrorText);
+  private subscribeOnControlStatusChanges() {
+    if (!this.controlStatus) {
+      this.subscription.add(
+        this.control.statusChanges
+          .pipe(
+            filter((status: string) => !this.controlStatus || this.controlStatus !== status),
+            tap((status: string) => this.controlStatus = status)
+          )
+          .subscribe(() => this.cd.detectChanges())
+      );
     }
-    return control.invalid ? this.control.errors : null;
   }
 
 }

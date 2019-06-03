@@ -11,8 +11,6 @@
                         placeholder="Password"
         ></app-form-input>
         <app-form-input formControlName="confirm"
-                        [equalToControl]="formGroup.controls.password"
-                        [equalErrorText]="'Password do not match'"
                         type="password"
                         placeholder="Confirm password"
         ></app-form-input>
@@ -21,5 +19,4 @@
   </section>
   <section></section>
 </article>
-
 <router-outlet></router-outlet>
